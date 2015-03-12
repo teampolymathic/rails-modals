@@ -128,6 +128,7 @@ $.fn.modal = (action, argument, message) ->
       modals[path] = req
 
     when 'replaceSubmit'
+      return if argument.displayBottomBar is false
       submit = $(this).find('input[type=submit]')
       label = $(submit).val()
       bottomBar = $(this).find('.bbm-modal__bottombar')
@@ -163,6 +164,7 @@ $.fn.modal = (action, argument, message) ->
         $(this).data('options', argument)
 
       @options = $(this).data('options') || {}
+      options = @options
 
       unless req
         $("script[data-path='#{path}']").modal('load')
@@ -326,7 +328,7 @@ $.fn.modal = (action, argument, message) ->
             )
 
             if form
-              $(this.el).modal('replaceSubmit')
+              $(this.el).modal('replaceSubmit', options)
             else
               $(this.el).find(".submit").hide()
               $(this.el).find(".close").addClass('alone')
