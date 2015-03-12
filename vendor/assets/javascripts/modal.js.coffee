@@ -1,7 +1,7 @@
 BBM_TEMPLATE = '
 <div class="bbm-modal__topbar">
   <h3 class="bbm-modal__title"><%= title %></h3>
-  <a href="javascript:;" class="bbm-button cancel" style="display: none">&times; Cancel</a>
+  <a href="javascript:;" class="bbm-button cancel close" style="display: none">&times; Cancel</a>
 </div>
 <div class="bbm-modal__section">
   <%= content %>
@@ -157,15 +157,24 @@ $.fn.modal = (action, argument, message) ->
 
     when 'show'
       req = modals[path]
+
+      # Set options via argument to show
+      if !$(this).data('options')?
+        $(this).data('options', argument)
+
+      @options = $(this).data('options') || {}
+
       unless req
         $("script[data-path='#{path}']").modal('load')
         req = modals[path]
-        
+
+      # if modal is not yet loaded, return and wait
       if req? and req.readyState < 4
         $(this).tempText 'One sec...' if $(this).data('displayLoading')
         waits[path] = this
         return this
 
+      # trigger document events
       $(document).trigger 'modal:show'
       onDisplay(-> $(document).trigger('modal:page'))
 
@@ -370,6 +379,18 @@ $.fn.modal = (action, argument, message) ->
           $(modalView).modal('error', 0, errors.html())
 
       $('.modal').html(modalView.render().el)
+
+      if @options
+        # html styling
+        if @options.html
+          $('.modal').addClass(@options.html.class) if @options.html.class
+
+        # bottom bar options
+        if @options.displayBottomBar?
+          $('.modal').find('.bbm-modal__bottombar').hide() if @options.displayBottomBar is false
+
+        if @options.displayCloseButton is true
+          $('.modal').find('.bbm-button.cancel').show()
 
       title = $('.modal').find('.bbm-modal__title').text()
       $('.modal').attr('data-path', path)
