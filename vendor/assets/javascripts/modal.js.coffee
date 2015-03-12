@@ -68,8 +68,8 @@ $ ->
     $(this).modal 'load' if $(this).attr("data-precache")
 
   $(document.body).on 'click', '*[data-open-modal]', (e) ->
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault() if e.preventDefault
+    e.stopPropagation() if e.stopPropagation
 
     $(this).modal 'show'
     
@@ -220,7 +220,7 @@ $.fn.modal = (action, argument, message) ->
             'click .next': 'nextStep'
 
           previousStep: (e) ->
-            e.preventDefault()
+            e.preventDefault() if e.preventDefault
             @previous()
             
             onDisplay(=>
@@ -243,7 +243,7 @@ $.fn.modal = (action, argument, message) ->
 
           nextStep: (e, options) ->
             target = if e
-              e.preventDefault()
+              e.preventDefault() if e.preventDefault
               target = e.target
             else
               this.el
@@ -384,5 +384,5 @@ $(document).on "page:load", ->
 $.fn.disableEnter = ->
   $(this).on 'keyup', (e) ->
     if e.which is 13
-      e.preventDefault()
+      e.preventDefault() if e.preventDefault
       return false
