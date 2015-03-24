@@ -177,8 +177,8 @@ $.fn.modal = (action, argument, message) ->
         return this
 
       # trigger document events
-      $(document).trigger 'modal:show'
-      onDisplay(-> $(document).trigger('modal:page'))
+      $(document).trigger 'modal:show', this
+      onDisplay(-> $(document).trigger('modal:page', this))
 
       form = $("form[data-path='#{path}']")[0] # only take the first form matching the path
 
