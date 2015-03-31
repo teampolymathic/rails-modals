@@ -128,7 +128,7 @@ $.fn.modal = (action, argument, message) ->
       modals[path] = req
 
     when 'replaceSubmit'
-      return if argument.displayBottomBar is false
+      return if argument? and argument.displayBottomBar is false
       submit = $(this).find('input[type=submit]')
       label = $(submit).val()
       bottomBar = $(this).find('.bbm-modal__bottombar')
