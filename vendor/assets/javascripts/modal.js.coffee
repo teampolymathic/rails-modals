@@ -97,6 +97,9 @@ $.fn.modal = (action, argument, message) ->
     when 'load'
       req = $.ajax(
         url: path
+        dataType: "html"
+        accepts:
+          html: "text/html"
 
         success: (html) =>
           return if !dirty and $("form[data-path='#{path}']").length > 0 # already loaded
