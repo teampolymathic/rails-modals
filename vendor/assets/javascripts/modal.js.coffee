@@ -84,13 +84,24 @@ $ ->
 $.fn.modal = (action, argument, message) ->
   section = ".bbm-modal__section"
   path = $(this).attr('data-path')
+  $script = $(this)
+  dirty = $script.attr('data-dirty')?
+
   switch action
+    when 'dirty'
+      if !!argument
+        $script.attr('data-dirty', true)
+      else
+        $script.removeAttr('data-dirty')
+
     when 'load'
       req = $.ajax(
         url: path
 
         success: (html) =>
-          return if $("form[data-path='#{path}']").length > 0 # already loaded
+          return if !dirty and $("form[data-path='#{path}']").length > 0 # already loaded
+
+          $(this).modal('dirty', false)
 
           # Extracts title from the page title itself.
           title = html.match(/<title>((?:.|[\r\n])+)<\/title>/)[1] || 'Modal'
@@ -157,7 +168,7 @@ $.fn.modal = (action, argument, message) ->
       onDisplay(-> $('.bbm-modal__section').prepend(message))
 
     when 'show'
-      req = modals[path]
+      req = modals[path] unless dirty
 
       # Set options via argument to show
       if !$(this).data('options')?
@@ -167,7 +178,7 @@ $.fn.modal = (action, argument, message) ->
       options = @options
 
       unless req
-        $("script[data-path='#{path}']").modal('load')
+        $(this).modal('load')
         req = modals[path]
 
       # if modal is not yet loaded, return and wait
