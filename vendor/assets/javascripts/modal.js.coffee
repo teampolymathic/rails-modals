@@ -181,7 +181,7 @@ $.fn.modal = (action, argument, message) ->
       options = @options
 
       unless req
-        $(this).modal('load')
+        $("script[data-path='#{path}']").modal('load')
         req = modals[path]
 
       # if modal is not yet loaded, return and wait
